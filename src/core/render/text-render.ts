@@ -1,6 +1,6 @@
-import Store from "../store";
-import { RenderText } from "../typing";
-import { isObject, isUndef } from "../utils";
+import Store from "../../store";
+import { RenderText } from "../../typing";
+import { isObject, isUndef } from "../../utils";
 import { renderLine } from "./line-render";
 
 
@@ -60,7 +60,7 @@ export function renderText(ctx: CanvasRenderingContext2D, text: RenderText, opti
             x: getPosVal(posX, endX),
             y: getPosVal(posY, endY),
           }
-        });å
+        });
       });
     }
   })

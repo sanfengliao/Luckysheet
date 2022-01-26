@@ -1,4 +1,4 @@
-import { RenderLine } from "../typing";
+import { RenderLine } from "../../typing";
 
 export const renderLine = (ctx: CanvasRenderingContext2D, line: RenderLine) => {
   const { start, end, style, width } = line;

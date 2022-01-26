@@ -19,7 +19,7 @@ import method from './method';
 import Store from '../store';
 import locale from '../locale/locale';
 import sheetmanage from '../controllers/sheetmanage';
-import { renderText } from '../render/text-render'
+import { renderText } from '../core/render/text-render'
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
     if (scrollHeight == null) {
