@@ -8,7 +8,7 @@ export interface Options {
   posX: number;
   posY: number;
 }
-export function renderCellText(ctx: CanvasRenderingContext2D, text: RenderText, options: Options) {
+export function renderText(ctx: CanvasRenderingContext2D, text: RenderText, options: Options) {
   const { values } = text;
   if (isUndef(values)) {
     return;

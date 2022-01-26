@@ -19,7 +19,7 @@ import method from './method';
 import Store from '../store';
 import locale from '../locale/locale';
 import sheetmanage from '../controllers/sheetmanage';
-import { renderCellText } from '../render/text-render'
+import { renderText } from '../render/text-render'
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
     if (scrollHeight == null) {
@@ -1754,7 +1754,7 @@ let cellRender = function(r, c, start_r, start_c, end_r, end_c, value, luckyshee
             luckysheetTableContent.fillStyle = '#ff0000';
         }
 
-        renderCellText(
+        renderText(
             luckysheetTableContent,
             textInfo,
             {
@@ -1885,7 +1885,7 @@ let cellOverflowRender = function(r, c, stc, edc,luckysheetTableContent,scrollHe
         luckysheetTableContent.fillStyle = checksCF["textColor"];
     }
 
-    renderCellText(
+    renderText(
         luckysheetTableContent,
         textInfo,
         {
