@@ -1,8 +1,7 @@
-import Store from "../../store";
-import { RenderText } from "../../typing";
-import { isObject, isUndef } from "../../utils";
-import { renderLine } from "./line-render";
-
+import Store from '../../store';
+import { RenderText } from '../../typing';
+import { isObject, isUndef } from '../../utils';
+import { renderLine } from './line-render';
 
 export interface Options {
   posX: number;
@@ -17,7 +16,6 @@ export function renderText(ctx: CanvasRenderingContext2D, text: RenderText, opti
 
   const { posX, posY } = options;
 
-
   values.forEach(word => {
     const { inline, style, content, left, top, underLine, cancelLine } = word;
     if (inline && isObject(style)) {
@@ -29,7 +27,7 @@ export function renderText(ctx: CanvasRenderingContext2D, text: RenderText, opti
 
     const text = isObject(content) ? content.m : content;
     ctx.fillText(text, (posX + left) / Store.zoomRatio, (posY + top) / Store.zoomRatio);
-  
+
     if (cancelLine) {
       const { startX, startY, endX, endY, fs } = cancelLine;
       renderLine(ctx, {
@@ -67,6 +65,5 @@ export function renderText(ctx: CanvasRenderingContext2D, text: RenderText, opti
 
   ctx.restore();
 }
-
 
 const getPosVal = (pos: number, offset: number) => Math.floor((pos + offset) / Store.zoomRatio) + 0.5;

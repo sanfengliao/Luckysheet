@@ -59,7 +59,8 @@
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "commit": "git-cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "eslint": "eslint"
   },
   "files": [
     "dist"
