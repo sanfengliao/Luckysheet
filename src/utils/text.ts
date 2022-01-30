@@ -163,3 +163,7 @@ export const getUnderLine = (underline: Underline, options: TextDecorate) => {
   }
   return result;
 }
+
+export function checkWordByteLength(value: string) {
+  return Math.ceil(value.charCodeAt(0).toString(2).length / 8);
+}

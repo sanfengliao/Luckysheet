@@ -17,7 +17,7 @@ export interface RenderTextValue {
     fontset: string;
     fc: string;
   };
-  inline: boolean;
+  inline?: boolean;
   cancelLine?: DecorateLine;
   underLine?: DecorateLine[]
 }
@@ -30,7 +30,7 @@ export interface RenderText {
   textLeftAll: number;
   textTopAll: number;
   textWidthAll: number;
-  type: string;
+  type: 'plain' | 'plainWrap';
 }
 
 export interface Pos {

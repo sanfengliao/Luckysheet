@@ -7,6 +7,7 @@ import { isInlineStringCell } from '../controllers/inlineString';
 
 import Store from '../store';
 import { transformNormalTextCell } from '../core/cell/transformer/normal_text';
+import { transformWrapTextCell } from '../core/cell/transformer/wrap_text';
 
 /**
  * 计算范围行高
@@ -938,6 +939,12 @@ function getCellTextInfo(cell, ctx, option) {
           }
         }
       } else {
+        return transformWrapTextCell(ctx, cell, {
+          cellWidth,
+          cellHeight,
+          spaceHeight: 2,
+          spaceWidth: 2,
+        });
         value = value.toString();
         while (i <= value.length) {
           const str = value.substring(anchor, i);
