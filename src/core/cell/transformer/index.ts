@@ -1,6 +1,9 @@
 import { Cell, Horizontal, TextBreak, Underline, Vertical } from '../../../typing';
-import { CellStatusUtil } from '../../../utils/cell';
+import { CellStatusUtil, isInlineStringCell } from '../../../utils/cell';
 import { getFontFormat } from '../../../utils/font';
+import { transformInlineTextCell } from './inline_text';
+import { transformNormalTextCell } from './normal_text';
+import { transformWrapTextCell } from './wrap_text';
 
 export interface Options {
   cellWidth: number;
@@ -31,7 +34,7 @@ export function extractCellInfo(cell: Cell): CellInfo {
   const cancelLine = CellStatusUtil.get(cell, 'cl');
   const fontSize = CellStatusUtil.getFontSize(cell);
   const textBreak = CellStatusUtil.getTextBreak(cell);
-  const value = cell.m || cell.v || cell;
+  const value = cell.m?.v || cell.v || cell;
 
   return {
     horizontal,
@@ -46,11 +49,27 @@ export function extractCellInfo(cell: Cell): CellInfo {
 }
 
 export const transformCell2RenderText = (ctx: CanvasRenderingContext2D, cell: Cell, opts: Options) => {
-  const { cellWidth } = opts;
+  const { cellWidth, cellHeight, spaceWidth = 2, spaceHeight = 2, r, c } = opts;
   let mode = '';
   // console.log("initialinfo", cell, option);
   if (!cellWidth) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mode = 'onlyWidth';
   }
+  const transformOpts = {
+    cellWidth,
+    cellHeight,
+    spaceHeight,
+    spaceWidth,
+    r,
+    c,
+  }
+  if (isInlineStringCell(cell)) {
+    return transformInlineTextCell(ctx, cell, transformOpts);
+  }
+
+  if (cell.tb === TextBreak.Wrap) {
+    return transformWrapTextCell(ctx, cell, transformOpts);
+  }
+  return transformNormalTextCell(ctx, cell, transformOpts);
 };

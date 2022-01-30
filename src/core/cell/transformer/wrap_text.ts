@@ -205,11 +205,9 @@ export function transformLineListToTextCell({
   textContent.textWidthAll = totalTextWidth;
   textContent.textHeightAll = totalTextHeight;
 
-  // TODO
-  // if (isMode == 'onlyWidth') {
-  //   // console.log("plainWrap", textContent,cell, option);
-  //   return textContent;
-  // }
+  if (!cellWidth) {
+    return textContent;
+  }
   let preTotalHeight = 0;
   let preTotalWidth = 0;
   lineList.forEach((line, i) => {

@@ -20,6 +20,7 @@ import Store from '../store';
 import locale from '../locale/locale';
 import sheetmanage from '../controllers/sheetmanage';
 import { renderText } from '../core/render/text-render'
+import { transformCell2RenderText } from '../core/cell/transformer';
 
 function luckysheetDrawgridRowTitle(scrollHeight, drawHeight, offsetTop) {
     if (scrollHeight == null) {
@@ -1689,7 +1690,7 @@ let cellRender = function(r, c, start_r, start_c, end_r, end_c, value, luckyshee
         luckysheetTableContent.scale(Store.zoomRatio,Store.zoomRatio);
 
 
-        let textInfo = getCellTextInfo(cell , luckysheetTableContent, {
+        let textInfo = transformCell2RenderText(luckysheetTableContent, cell, {
             cellWidth:cellWidth,
             cellHeight:cellHeight,
             space_width:space_width,
