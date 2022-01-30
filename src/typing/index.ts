@@ -63,23 +63,6 @@ export const enum TextBreak {
   Wrap = 2,
 }
 
-export interface CellType {
-  fa: string;
-  t: 'inlineStr' | string;
-  s: {
-    ff: string;
-    fc: string;
-    fs: number;
-    cl: number;
-    un: number;
-    bl: number;
-    it: number;
-    v: string;
-  }[]
-}
-
-export type UnderlineType = 0 | 1 | 2 | 3 | 4
-
 export const enum Underline {
   None = 0,
   Bottom = 1,
@@ -88,6 +71,20 @@ export const enum Underline {
   BottomDesc2
 }
 
+export interface CellType {
+  fa: string;
+  t: 'inlineStr' | string;
+  s: {
+    ff: string;
+    fc: string;
+    fs: number;
+    cl: 0 | 1;
+    un: Underline;
+    bl: number;
+    it: number;
+    v: string;
+  }[]
+}
 export interface Cell {
   fc?: string;
   bg?: string;
@@ -99,7 +96,7 @@ export interface Cell {
   rt?: string | number;
   m?: any;
   v?: any;
-  un?: UnderlineType,
+  un?: Underline,
   cl?: 0 | 1;
   it?: number;
   bl?: number;

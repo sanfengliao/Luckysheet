@@ -1,4 +1,4 @@
-import { Cell } from '../../../typing';
+import { Cell, Horizontal, TextBreak, Underline, Vertical } from '../../../typing';
 import { CellStatusUtil } from '../../../utils/cell';
 import { getFontFormat } from '../../../utils/font';
 
@@ -11,7 +11,18 @@ export interface Options {
   c: number;
 }
 
-export function extractCellInfo(cell: Cell) {
+export interface CellInfo {
+  horizontal: Horizontal;
+  vertical: Vertical;
+  value: string;
+  fontSize: number;
+  fontset: string;
+  underLine: Underline;
+  cancelLine: number;
+  textBreak: TextBreak;
+}
+
+export function extractCellInfo(cell: Cell): CellInfo {
   const horizontal = CellStatusUtil.getHorizontal(cell);
   // 垂直对齐
   const vertical = CellStatusUtil.getVertical(cell);

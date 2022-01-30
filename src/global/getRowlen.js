@@ -8,6 +8,7 @@ import { isInlineStringCell } from '../controllers/inlineString';
 import Store from '../store';
 import { transformNormalTextCell } from '../core/cell/transformer/normal_text';
 import { transformWrapTextCell } from '../core/cell/transformer/wrap_text';
+import { transformInlineTextCell } from '../core/cell/transformer/inline_text';
 
 /**
  * 计算范围行高
@@ -697,6 +698,12 @@ function getCellTextInfo(cell, ctx, option) {
 
       let anchor = 0; const preHeight = 0; const preWidth = 0; let preStr; let preTextHeight; let preTextWidth; let preMeasureText; let i = 1; const wrapStyle = {}; let spaceOrTwoByte = null; let spaceOrTwoByteIndex = null;
       if (isInline) {
+        return transformInlineTextCell(ctx, cell, {
+          cellWidth,
+          cellHeight,
+          spaceHeight: 2,
+          spaceWidth: 2,
+        });
         while (i <= inlineStringArr.length) {
           const shareCells = inlineStringArr.slice(anchor, i);
           if (shareCells[shareCells.length - 1].wrap === true) {

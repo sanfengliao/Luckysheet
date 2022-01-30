@@ -1,9 +1,9 @@
-import { extractCellInfo, Options } from '.';
+import { CellInfo, extractCellInfo, Options } from '.';
 import { Cell, Horizontal, RenderText, RenderTextValue, Vertical } from '../../../typing';
 import { isUndef } from '../../../utils';
 import { checkWordByteLength, getCancelLine, getMeasureText, getUnderLine } from '../../../utils/text';
 
-export interface Style {
+export interface StyleChar {
   fc: string;
   cl: number;
   un: number;
@@ -12,10 +12,11 @@ export interface Style {
   fontset: string;
   v?: string;
   measureText?: TextMetrics;
+  si?: number;
 }
 export interface Char {
   content: string;
-  style: string | Style;
+  style: string | StyleChar;
   width: number;
   height: number;
   left: number;
@@ -24,16 +25,17 @@ export interface Char {
   asc: number;
   desc: number;
   inline?: boolean;
+  wrap?: boolean;
   fs: number;
 };
 
 export type Line = Char[];
 
 export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell, opts: Options) {
-  const { spaceWidth, cellWidth, cellHeight, spaceHeight } = opts;
+  const { spaceWidth, cellWidth } = opts;
   const cellInfo = extractCellInfo(cell);
   let { value } = cellInfo;
-  const { fontset, fontSize, horizontal, vertical, underLine, cancelLine } = cellInfo;
+  const { fontset, fontSize } = cellInfo;
   value = value.toString();
   let i = 1;
   let anchor = 0;
@@ -44,10 +46,6 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
   let preStr = '';
   let splitIndex = 0;
   const lineList: Line[] = [];
-  const textContent = {} as RenderText;
-  textContent.values = [];
-  let totalTextWidth = 0;
-  let totalTextHeight = 0;
 
   // 将文字切分成行
   while (i <= value.length) {
@@ -137,7 +135,40 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
     preTextWidth = width;
     preMeasureText = measureText;
   }
+  return transformLineListToTextCell({
+    ctx,
+    cellInfo,
+    lineList,
+    opts,
+  });
+}
 
+export function transformLineListToTextCell({
+  ctx,
+  opts: {
+    cellHeight,
+    cellWidth,
+    spaceHeight,
+    spaceWidth
+  },
+  lineList,
+  cellInfo: {
+    fontSize,
+    cancelLine,
+    underLine,
+    horizontal,
+    vertical,
+  }
+}: {
+  lineList: Line[]
+  ctx: CanvasRenderingContext2D,
+  opts: Options;
+  cellInfo: CellInfo
+}) {
+  const textContent = {} as RenderText;
+  textContent.values = [];
+  let totalTextWidth = 0;
+  let totalTextHeight = 0;
   const lineSizeList: any[] = [];
   let maxWordCountOfOneLine = 0;
   const supportBoundBox = isSupportBoundingBox(ctx);
@@ -157,7 +188,7 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
       desc = Math.max(desc, (supportBoundBox ? sp.desc : 0));
       asc = Math.max(asc, sp.asc);
       wordCount++;
-    })
+    });
     maxWordCountOfOneLine = Math.max(maxWordCountOfOneLine, wordCount);
     totalTextWidth = Math.max(totalTextWidth, width);
     totalTextHeight += height;
@@ -169,7 +200,7 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
       asc,
       wordCount,
     });
-  })
+  });
 
   textContent.textWidthAll = totalTextWidth;
   textContent.textHeightAll = totalTextHeight;
@@ -208,6 +239,8 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
         // 所有文字的所有文字的纵坐标起始位置= spaceHeight
         top = spaceHeight + preTotalHeight + size.asc;
       }
+      wordGroup.left = left;
+      wordGroup.top = top;
       const decorateParam = {
         width: wordGroup.width,
         left: wordGroup.left,
@@ -215,14 +248,18 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
         asc: size.asc,
         desc: size.desc,
         fontSize,
+      };
+
+      if (wordGroup.inline) {
+        const { cl, un } = wordGroup.style as StyleChar
+        cancelLine = cl;
+        underLine = un;
       }
+
       if (cancelLine) {
-        wordGroup.cancelLine = getCancelLine(decorateParam)
+        wordGroup.cancelLine = getCancelLine(decorateParam);
       }
       wordGroup.underLine = getUnderLine(underLine, decorateParam);
-
-      wordGroup.left = left;
-      wordGroup.top = top;
 
       textContent.values.push(wordGroup);
 
@@ -230,7 +267,7 @@ export function transformWrapTextCell(ctx: CanvasRenderingContext2D, cell: Cell,
     }
 
     preTotalHeight += size.height;
-  })
+  });
 
   textContent.type = 'plainWrap';
   return textContent;
